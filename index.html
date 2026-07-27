@@ -52,7 +52,7 @@ svg{display:block;}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dark-only{display:block;} :root:not([data-theme="light"]) .light-only{display:none;}}
 :root[data-theme="dark"] .dark-only{display:block;} :root[data-theme="dark"] .light-only{display:none;}
 :root[data-theme="light"] .light-only{display:block;} :root[data-theme="light"] .dark-only{display:none;}
-.brand-logo{height:18px;width:auto;}
+.brand-word{font-weight:var(--fw-sb);font-size:15px;letter-spacing:.2em;color:var(--ink-1);}
 .sb-acct{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--r);margin-bottom:6px;}
 .sb-avatar{width:22px;height:22px;border-radius:5px;background:var(--ink-1);color:var(--paper);font-size:11px;font-weight:var(--fw-sb);display:flex;align-items:center;justify-content:center;}
 .sb-acct .n{font-size:12.5px;color:var(--ink-1);}
@@ -115,11 +115,11 @@ svg{display:block;}
 /* password gate */
 .gate{position:fixed;inset:0;z-index:500;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .25s var(--ease);}
 .gate-card{width:100%;max-width:312px;text-align:center;}
-.gate-logo{height:19px;width:auto;margin:0 auto;}
-.gate-rule{width:34px;height:2px;background:var(--grad-ai);margin:22px auto 24px;border-radius:2px;}
+.gate-word{font-weight:var(--fw-sb);font-size:18px;letter-spacing:.26em;color:var(--ink-1);display:inline-block;}
+.gate-rule{width:34px;height:2px;background:var(--grad-ai);margin:22px auto 26px;border-radius:2px;}
 .gate h2{font-size:20px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 6px;}
 .gate p{font-size:13px;color:var(--ink-3);margin:0 0 24px;line-height:1.5;}
-.gate form{display:flex;flex-direction:column;gap:9px;}
+.gate form{display:flex;flex-direction:column;gap:16px;}
 .gate input{height:46px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:16px;padding:0 16px;text-align:center;letter-spacing:.3em;transition:border-color var(--dur) var(--ease);}
 .gate input::placeholder{letter-spacing:.14em;color:var(--ink-4);}
 .gate input:focus{outline:none;border-color:var(--ink-1);}
@@ -174,6 +174,49 @@ svg{display:block;}
 .mdbody li{font-size:14px;color:var(--ink-2);line-height:1.6;margin-bottom:4px;}
 .mdbody code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--warm);border:1px solid var(--stroke-1);border-radius:4px;padding:1px 5px;}
 .mdbody b{color:var(--ink-1);font-weight:var(--fw-sb);}
+
+/* north star */
+.ns-sec{display:block;margin:34px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--stroke-2);}
+.ns-layers{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
+.ns-layer{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:16px 18px;}
+.nsl-n{width:26px;height:26px;border-radius:50%;background:var(--ink-1);color:var(--paper);font-size:12px;font-weight:var(--fw-sb);display:flex;align-items:center;justify-content:center;}
+.nsl-h{font-size:15px;color:var(--ink-1);display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+.nsl-t{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:var(--fw-sb);}
+.nsl-d{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:4px;}
+.okrblk{background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:10px;}
+.okrh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.okro{font-size:16px;color:var(--ink-1);}
+.emo{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--fw-sb);padding:3px 10px;border:1px solid var(--stroke-2);border-radius:var(--pill);}
+.emo .pdd{width:6px;height:6px;border-radius:50%;}
+.krs{display:flex;flex-direction:column;gap:1px;background:var(--stroke-1);border:1px solid var(--stroke-1);border-radius:var(--r);overflow:hidden;}
+.kr{display:grid;grid-template-columns:1.5fr 1.6fr auto;gap:10px 14px;padding:11px 14px;background:var(--card);align-items:baseline;}
+.krk{font-size:13px;color:var(--ink-1);font-weight:500;}
+.krt{font-size:12.5px;color:var(--ink-3);}
+.krw{font-size:11px;color:var(--ink-3);text-align:right;}
+.krn{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);}
+.okrdown{font-size:12.5px;color:var(--ink-2);line-height:1.55;margin-top:12px;display:flex;gap:7px;}
+.okrdown .arw{color:var(--clarity);flex-shrink:0;font-weight:var(--fw-sb);}
+.nsaxes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--stroke-2);border:1px solid var(--stroke-2);border-radius:var(--r);overflow:hidden;}
+.nsaxis{background:var(--card);padding:16px;}
+.nsaxn{font-size:13.5px;color:var(--ink-1);font-weight:500;margin-bottom:5px;}
+.nsaxd{font-size:12.5px;color:var(--ink-2);line-height:1.5;}
+.nsloops{display:flex;flex-direction:column;gap:8px;}
+.nsloop{display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;font-size:13.5px;color:var(--ink-2);line-height:1.55;}
+.nsloopn{font-size:12px;color:var(--clarity);font-weight:var(--fw-sb);}
+.nsrmw{display:flex;flex-direction:column;gap:1px;background:var(--stroke-2);border:1px solid var(--stroke-2);border-radius:var(--r);overflow:hidden;}
+.nsrm{display:grid;grid-template-columns:82px 1fr;gap:16px;padding:14px 16px;background:var(--card);align-items:start;}
+.nsrmp{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--signal);font-weight:var(--fw-sb);padding-top:2px;}
+.nsrmf{font-size:14px;color:var(--ink-1);}
+.nsrma{font-size:12.5px;color:var(--ink-2);line-height:1.5;margin-top:4px;}
+.anti{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.anticol{border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:16px 18px;}
+.anticol-build{border-color:var(--sage,var(--amplify));}
+.antih{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:var(--fw-sb);margin-bottom:10px;}
+.anticol-build .antih{color:#2F7D4A;}
+.anticol-repl .antih{color:var(--ink-3);}
+.anticol ul{margin:0;padding-left:18px;}
+.anticol li{font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:3px;}
+.anticol-repl li{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--stroke-3);}
 .sb-item svg{width:15px;height:15px;color:var(--ink-3);flex-shrink:0;}
 .sb-item.active svg{color:var(--ink-1);}
 .sb-spacer{flex:1;}
@@ -322,14 +365,17 @@ svg{display:block;}
   .tiles{grid-template-columns:repeat(2,1fr);}
   .aud{grid-template-columns:1fr;}
   .aud .sev{justify-self:start;}
+  .nsaxes{grid-template-columns:1fr;}
+  .anti{grid-template-columns:1fr;}
+  .kr{grid-template-columns:1fr;}
+  .krw{text-align:left;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 </style>
 
 <div class="gate" id="gate">
   <div class="gate-card">
-    <img class="gate-logo light-only" src="data:image/png;base64,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" alt="Plaud">
-    <img class="gate-logo dark-only" src="data:image/png;base64,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" alt="Plaud">
+    <span class="gate-word">PLAUD</span>
     <div class="gate-rule"></div>
     <h2>This board is private.</h2>
     <p>Enter the passcode to continue.</p>
@@ -416,6 +462,7 @@ var ICONS={
  shield:'<path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3Z"/><path d="M9.3 12l1.8 1.8L15 10"/>',
  book:'<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2V4Z"/><path d="M5 18h13"/>',
  chev:'<path d="M9 6l6 6-6 6"/>',
+ star:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z"/>',
  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
  dotgrid:'<circle cx="5" cy="5" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="19" cy="5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="19" r="1.4"/><circle cx="12" cy="19" r="1.4"/><circle cx="19" cy="19" r="1.4"/>'
 };
@@ -471,7 +518,7 @@ function renderSidebar(){
      +'<div class="sb-group"'+(open?"":' style="display:none"')+'>'+inner+'</div>';
  }
  var h="";
- h+='<div class="sb-brand"><img class="brand-logo light-only" src="data:image/png;base64,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" alt="Plaud"><img class="brand-logo dark-only" src="data:image/png;base64,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" alt="Plaud"></div>';
+ h+='<div class="sb-brand"><span class="brand-word">PLAUD</span></div>';
  h+='<div class="sb-acct"><span class="sb-avatar">P</span><span class="n">Pinyan</span><span class="r">CO</span></div>';
  h+=item("home","",'home',"Overview","",view.sec==="home");
  h+='<div class="sb-head">Weeks</div>';
@@ -486,6 +533,8 @@ function renderSidebar(){
  ["D","E","F"].forEach(function(o){
    h+='<button class="sb-item'+(view.sec==="obj"&&view.obj===o?" active":"")+'" data-nav="obj" data-obj="'+o+'"><span class="cdot" style="background:'+OBJ_COLOR[o]+'"></span><span class="lab">Obj '+o+' · '+OBJ_NAME[o]+'</span><span class="cnt tnum">'+c.obj[o]+'</span></button>';
  });
+ h+='<div class="sb-head">Strategy</div>';
+ h+=item("northstar","",'star',"North Star","",view.sec==="northstar");
  var hubItems=item("journal","",'log',"Daily log",'<span class="cnt tnum">'+logCountToday()+'</span>',view.sec==="journal")
    +item("ideas","",'bulb',"Idea bank",'<span class="cnt tnum">'+(state.ideas?state.ideas.length:0)+'</span>',view.sec==="ideas")
    +item("briefs","",'spark',"Program briefs",'<span class="cnt tnum">'+(state.briefs?state.briefs.length:0)+'</span>',view.sec==="briefs")
@@ -585,6 +634,8 @@ function renderMain(){
      +'<div class="p">Open questions. The LinkedIn channel idea, if it\'s still on your mind.</div>'
    +'</div>';
    h+='<textarea class="note-field" id="jot" placeholder="Start jotting. Saves as you type — only on this device."></textarea><p class="note-status" id="jot-status"></p>';
+ }else if(view.sec==="northstar"){
+   h+=northstarHTML();
  }else if(view.sec==="journal"){
    h+=journalHTML();
  }else if(view.sec==="ideas"){
@@ -660,6 +711,82 @@ function auditHTML(){
  var rows=AUDIT.map(function(a){return '<div class="aud"><span class="sev sev-'+a.sev+'">'+a.sev+'</span><div><div class="at">'+escapeHTML(a.title)+'</div><div class="ad">'+escapeHTML(a.detail)+'</div><div class="af"><b>Fix —</b> '+escapeHTML(a.fix)+'</div></div></div>';}).join("");
  return '<div class="mhead"><div><span class="ovl">System · Known issues</span><h1>Health check.</h1><p class="sub">Weaknesses I’ve spotted while building this. Nothing here is on fire — it’s a shared punch-list for when you want to harden things. We can open and fix them together.</p></div></div>'
   +'<div class="audit">'+rows+'</div>';
+}
+
+/* ---------- north star / big picture ---------- */
+var OKR=[
+ {o:"O1 · Amplify the Love",emo:"Seen",color:"var(--clarity)",krs:[
+   {k:"KR1 · Reach & impressions",t:"100% YoY growth",w:"20%",now:"114k reach · 34.7k OA (+258 WoW · 56.5% YTD)"},
+   {k:"KR2 · Content flywheel",t:"100 UGC / month",w:"15%",now:"45 / 100 (+23 this week)"}
+ ],down:"Compounds into a reusable AI-native workflow / demo library + technical-narrative portfolio. Axis — technical narrative + APAC distribution. Anti-replacement: abstract each high-performing UGC into a reusable workflow (seeds Workflow Taxonomy v1), not just reach & recaps."},
+ {o:"O2 · Address What Hurts",emo:"Heard",color:"var(--signal)",krs:[
+   {k:"KR3 · Response coverage",t:"≥75% in 72h · attacks in 24h",w:"20%",now:"95% (113 / 119 noises)"},
+   {k:"KR4 · Response quality",t:"≥50% single-reply",w:"15%",now:"90% single-reply · 12 insights → VoC · 3 FAQ → KT"}
+ ],down:"Compounds into a weekly User Signal Memo → Community→Product Decision Log (target: 3 decisions changed). Axis — product signal + strategic judgment. Anti-replacement: route each insight to a decision-owner and log the change; coverage % alone is replaceable."},
+ {o:"O3 · Cultivate the Inner Circle",emo:"Valued",color:"var(--amplify)",krs:[
+   {k:"KR5 · User research pool",t:"~2,000 by year end",w:"10%",now:"125 organic signups"},
+   {k:"KR6 · Ambassador pool",t:"200 active",w:"10%",now:"on hold"},
+   {k:"KR7 · Builder pool",t:"500 builders · 500 showcases",w:"10%",now:"812 Builder Discord (+5 WoW)"}
+ ],down:"Compounds into an Advocate Scoring Rubric + contributor/recognition pipeline + Sigma case studies. Axis — advocate ecosystem + operating-system + relationship capital. Anti-replacement: build the rubric (which builders matter & why) + recognition loop; member counts are vanity."}
+];
+var AXES=[
+ ["Advocate ecosystem","Find, connect, and activate organic advocates & builders."],
+ ["Technical narrative","Turn capability into demos, templates, tutorials, workflows."],
+ ["Product signal","Synthesize fuzzy user voice into product-grade judgment."],
+ ["Distribution · APAC/Mandarin","Land global AI on specific people, language, and scenes."],
+ ["Operating-system building","Contributor standards, pipelines, recognition & metrics loops."],
+ ["Relationship capital","Every deep user/builder becomes an advocate, source, or node."]
+];
+var LOOPS=[
+ "User relationships compound — each deep user can become advocate, research subject, content source, event node.",
+ "Content assets compound — each template / workflow / demo can be distributed, reused, standardised, upgraded.",
+ "Product judgment compounds — each feedback synthesis sharpens your read on market, users, and product edges.",
+ "Career narrative compounds — each project becomes evidence for the next role, not just internal execution."
+];
+var ROADMAP=[
+ ["0–3 mo","Build user-field presence","Workflow Taxonomy v1 · Advocate Scoring Rubric · weekly User Signal Memo · 30–50 interviews · top-10 workflows"],
+ ["3–6 mo","Productise workflows","Template library (20–30) · 5–10 playbooks · submission / QA / distribution / recognition system · perf dashboard"],
+ ["6–12 mo","Prove Product/GTM impact","Monthly cross-functional insight review · 3 Product/UX/GTM decision changes · Community→Product Decision Log"],
+ ["12–18 mo","Prep the next platform","3 case studies · 2 demos / prototypes · 3–5 technical-narrative essays"]
+];
+var ANTI_BUILD=["Judging which users matter","Abstracting real workflows","Pushing product / UX / GTM decisions","Setting contribution standards","Turning user stories into reusable demos / playbooks"];
+var ANTI_REPL=["Event logistics","Generic newsletters","Social recaps","Basic moderation","Manual approval routing"];
+
+function northstarHTML(){
+ var okr=OKR.map(function(O){
+   var rows=O.krs.map(function(r){return '<div class="kr"><div class="krk">'+r.k+'</div><div class="krt">'+r.t+'</div><div class="krw tnum">'+r.w+'</div><div class="krn">'+r.now+'</div></div>';}).join("");
+   return '<div class="okrblk"><div class="okrh"><span class="okro">'+O.o+'</span><span class="emo" style="border-color:'+O.color+';color:'+O.color+'"><span class="pdd" style="background:'+O.color+'"></span>'+O.emo+'</span></div><div class="krs">'+rows+'</div><div class="okrdown"><span class="arw">↳</span> '+O.down+'</div></div>';
+ }).join("");
+ var axes=AXES.map(function(a){return '<div class="nsaxis"><div class="nsaxn">'+a[0]+'</div><div class="nsaxd">'+a[1]+'</div></div>';}).join("");
+ var loops=LOOPS.map(function(l,i){return '<div class="nsloop"><span class="nsloopn tnum">0'+(i+1)+'</span><span>'+l+'</span></div>';}).join("");
+ var rm=ROADMAP.map(function(r){return '<div class="nsrm"><span class="nsrmp">'+r[0]+'</span><div><div class="nsrmf">'+r[1]+'</div><div class="nsrma">'+r[2]+'</div></div></div>';}).join("");
+ var build=ANTI_BUILD.map(function(x){return '<li>'+x+'</li>';}).join("");
+ var repl=ANTI_REPL.map(function(x){return '<li>'+x+'</li>';}).join("");
+ return ''
+ +'<div class="mhead"><div><span class="ovl">Strategy · North Star</span><h1>The big picture.</h1><p class="sub">Everything on the board ladders up to this. Three layers: your career thesis → this half’s Plaud OKR → the daily moves. Weeks & Objectives stay the fast team-align view; this is the why behind them.</p></div></div>'
+ // thesis
+ +'<div class="focus" style="margin-bottom:14px"><span class="ovl">Career thesis · 6–18 months</span><p class="focus__task" style="font-size:clamp(19px,2.2vw,25px);margin-top:12px">AI-native ecosystem builder.</p><p class="focus__move" style="margin-top:10px"><span>Compile real users, developers/creators, demos, content distribution, user research and cross-region community into a system that keeps producing adoption, insight, distribution and credibility — a compound career asset, not a single role.</span></p></div>'
+ // three layers
+ +'<div class="ns-layers">'
+   +'<div class="ns-layer"><span class="nsl-n">1</span><div><div class="nsl-h">Career thesis <span class="nsl-t">you · 6–18 mo</span></div><div class="nsl-d">AI-native ecosystem builder. The why it ultimately serves — sits above Plaud.</div></div></div>'
+   +'<div class="ns-layer"><span class="nsl-n">2</span><div><div class="nsl-h">This half’s Plaud OKR <span class="nsl-t">Seen · Heard · Valued</span></div><div class="nsl-d">O1 Amplify / O2 Address / O3 Cultivate — what the org rewards now. The fast team-align layer.</div></div></div>'
+   +'<div class="ns-layer"><span class="nsl-n">3</span><div><div class="nsl-h">Daily execution <span class="nsl-t">the board</span></div><div class="nsl-d">The moves you log. Each one should ladder up to a KR AND build a durable, compounding asset.</div></div></div>'
+ +'</div>'
+ // OKR
+ +'<div class="ns-sec ovl">This half’s OKR — the team-align reference</div>'
+ +okr
+ // leverage axes
+ +'<div class="ns-sec ovl">Six leverage axes — tag every move by what it builds</div>'
+ +'<div class="nsaxes">'+axes+'</div>'
+ // convexity loops
+ +'<div class="ns-sec ovl">Why it’s convex — four compounding loops</div>'
+ +'<div class="nsloops">'+loops+'</div>'
+ // roadmap
+ +'<div class="ns-sec ovl">0–18 month roadmap — asset targets, not tasks</div>'
+ +'<div class="nsrmw">'+rm+'</div>'
+ // anti-replacement
+ +'<div class="ns-sec ovl">Anti-replacement filter</div>'
+ +'<div class="anti"><div class="anticol anticol-build"><div class="antih">Build deliberately</div><ul>'+build+'</ul></div><div class="anticol anticol-repl"><div class="antih">Don’t mistake for growth</div><ul>'+repl+'</ul></div></div>';
 }
 
 /* ---------- context / handoff ---------- */
