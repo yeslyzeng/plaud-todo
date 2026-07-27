@@ -130,7 +130,8 @@ svg{display:block;}
 .gate .err{font-size:12px;color:var(--signal);min-height:16px;margin-top:2px;}
 .nsgate-full{min-height:66vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px 0;}
 .nsgate-card{width:100%;max-width:360px;}
-.nsgate-h{font-size:26px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:10px 0 8px;}
+.wip-badge{display:inline-block;font-size:10px;letter-spacing:.16em;font-weight:var(--fw-sb);text-transform:uppercase;color:#fff;background:var(--grad-ai);padding:4px 11px;border-radius:var(--pill);margin-bottom:18px;}
+.nsgate-h{font-size:23px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 8px;}
 .nsgate-p{font-size:14px;color:var(--ink-3);line-height:1.5;margin:0 0 24px;}
 .nsgate{max-width:360px;}
 .nsgate-card form{display:flex;flex-direction:column;gap:14px;}
@@ -766,7 +767,7 @@ var ANTI_REPL=["Event logistics","Generic newsletters","Social recaps","Basic mo
 
 var NS_HASH="f18c5143858af56ca23cc57ac3fbd17f97406e0e819daec872340112402bfc51";
 function nsUnlocked(){try{return localStorage.getItem("p4w:app:ns-unlocked")==="1";}catch(e){return false;}}
-function nsGateHTML(){return '<div class="nsgate-full"><div class="nsgate-card"><span class="ovl">Strategy \u00b7 North Star</span><h2 class="nsgate-h">Private.</h2><p class="nsgate-p">Your career layer \u2014 gated separately from the board, so only you see it.</p><form id="ns-form" autocomplete="off"><input id="ns-input" type="password" inputmode="text" placeholder="North Star passcode" aria-label="Passcode"><button type="submit" class="btn btn-pri">Unlock North Star</button><div class="err" id="ns-err"></div></form></div></div>';}
+function nsGateHTML(){return '<div class="nsgate-full"><div class="nsgate-card"><span class="wip-badge">WIP</span><h2 class="nsgate-h">Still under construction.</h2><p class="nsgate-p">Will be public when it\u2019s ready!</p><form id="ns-form" autocomplete="off"><input id="ns-input" type="password" inputmode="text" placeholder="North Star passcode" aria-label="Passcode"><button type="submit" class="btn btn-pri">Unlock North Star</button><div class="err" id="ns-err"></div></form></div></div>';}
 function initNSGate(){var f=document.getElementById("ns-form");if(!f)return;var inp=document.getElementById("ns-input"),err=document.getElementById("ns-err");f.addEventListener("submit",function(e){e.preventDefault();if(sha256(inp.value)===NS_HASH){try{localStorage.setItem("p4w:app:ns-unlocked","1");}catch(e2){}render();}else{err.textContent="Wrong passcode.";inp.value="";inp.focus();}});setTimeout(function(){try{inp.focus();}catch(e){}},50);}
 function northstarHTML(){ if(!nsUnlocked()) return nsGateHTML();
  var okr=OKR.map(function(O){
