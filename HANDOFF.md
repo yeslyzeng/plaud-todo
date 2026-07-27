@@ -30,6 +30,7 @@ mapped from the design pkg's `ui_kits/plaud-app`. Dark + light themes. Wordmark 
 
 ## Sub-pages (all in the hub sidebar)
 
+- **North Star** (Strategy) — the big picture: career thesis (AI-native ecosystem builder) → the real Plaud OKR (O1 Amplify/Seen, O2 Address/Heard, O3 Cultivate/Valued, KR1–7 with Week-31 live numbers, targets, weights) → daily execution. Plus the 6 leverage axes, 4 convexity loops, 0–18mo roadmap, anti-replacement filter. Sourced from the career-convexity zip + Notion Week 31. NOTE: the sidebar Objectives still show the placeholder D/E/F (kept prominent for fast team-align, per user); the *real* OKR lives on North Star. Open question: re-anchor the sidebar Objectives to O1/O2/O3.
 - **Overview** — proactive-focus panel, progress ring + per-week bars, all 21 moves grouped by week.
 - **Weeks 01–04** — real dates (Jul 27–31 … Aug 17–21, 2026) + live progression tags (Past / This week / Upcoming, computed from today).
 - **Objectives D/E/F** — moves filtered by OKR objective (colored tag dots).
@@ -51,7 +52,9 @@ mapped from the design pkg's `ui_kits/plaud-app`. Dark + light themes. Wordmark 
 
 - ✅ **GitHub → Vercel:** automatic deploy on every push. Push auth via repo-scoped SSH key `~/.ssh/id_ed25519_plaud_ffw2` (`core.sshCommand`, not global).
 - ⏳ **Daily idea digest:** slot + store exist; the scheduled agent that reads `ideas.md` → writes `digest.json` is NOT wired yet.
-- ⏳ **Daily log system:** web capture built; the native macOS check-in popups (12/3/6/11 Mon–Fri via launchd+osascript) and the synthesis agent (log → `journal.json` + weekly/monthly rollups) are NOT wired yet — pending confirmation to install local daemons.
+- ✅ **Daily log check-in popups: LIVE.** launchd job `com.plaud.checkin` (`~/Library/LaunchAgents/com.plaud.checkin.plist`) fires `first-four-weeks/scripts/checkin.sh` at 12/15/18/23 Mon–Fri → osascript dialog → appends to `deploy/log/<date>.md` → commits + pushes. Manage via `scripts/README.md`.
+- ⏳ **Log synthesis agent** (log → `journal.json` + weekly/monthly rollups, double-tagged by KR + leverage axis + GTM stage) — NOT wired yet.
+- ⚠️ **PRIVACY:** the check-in pushes raw `log/` to the repo, and Vercel serves ALL repo files (log/, ideas.md, goals.md, HANDOFF.md) publicly — the passcode gate only covers the index.html app UI, NOT other files. Raw logs are world-readable at the Vercel URL. Fix: enable Vercel Password Protection (server-side, now that the Vercel connector is available) or keep raw capture out of the served root. This is now the top hardening priority.
 - 💡 **Faster capture (proposed):** email → Gmail connector (available in session) → Claude parses text + screenshots via vision → appends to the knowledge base. Best low-friction path from phone; not built yet.
 
 ## Key decisions
