@@ -106,17 +106,67 @@ svg{display:block;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* password gate */
-.gate{position:fixed;inset:0;z-index:500;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .2s var(--ease);}
-.gate-card{width:100%;max-width:340px;text-align:center;}
-.gate-logo{height:22px;width:auto;margin:0 auto 26px;}
-.gate h2{font-size:22px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 8px;}
-.gate p{font-size:13.5px;color:var(--ink-3);margin:0 0 22px;line-height:1.5;}
-.gate form{display:flex;flex-direction:column;gap:10px;}
-.gate input{height:44px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:15px;padding:0 14px;text-align:center;letter-spacing:.1em;}
+.gate{position:fixed;inset:0;z-index:500;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .25s var(--ease);}
+.gate-card{width:100%;max-width:312px;text-align:center;}
+.gate-logo{height:19px;width:auto;margin:0 auto;}
+.gate-rule{width:34px;height:2px;background:var(--grad-ai);margin:22px auto 24px;border-radius:2px;}
+.gate h2{font-size:20px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 6px;}
+.gate p{font-size:13px;color:var(--ink-3);margin:0 0 24px;line-height:1.5;}
+.gate form{display:flex;flex-direction:column;gap:9px;}
+.gate input{height:46px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:16px;padding:0 16px;text-align:center;letter-spacing:.3em;transition:border-color var(--dur) var(--ease);}
+.gate input::placeholder{letter-spacing:.14em;color:var(--ink-4);}
 .gate input:focus{outline:none;border-color:var(--ink-1);}
-.gate button{height:44px;background:var(--ink-1);color:var(--paper);border:none;border-radius:var(--pill);font:inherit;font-size:13.5px;font-weight:var(--fw-sb);cursor:pointer;}
+.gate button{height:46px;background:var(--ink-1);color:var(--paper);border:none;border-radius:var(--pill);font:inherit;font-size:13.5px;font-weight:var(--fw-sb);cursor:pointer;transition:opacity var(--dur-fast) var(--ease);}
+.gate button:hover{opacity:.9;}
 .gate button:active{transform:scale(.99);}
 .gate .err{font-size:12px;color:var(--signal);min-height:16px;margin-top:2px;}
+.gate-hint{font-size:11px;color:var(--ink-4);margin-top:18px;letter-spacing:.02em;}
+
+/* metric tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 20px;}
+.tile{background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);padding:14px 16px;}
+.tv{font-size:26px;letter-spacing:-0.02em;line-height:1;}
+.tl{font-size:11px;color:var(--ink-3);margin-top:6px;}
+/* log entries */
+.loglist{display:flex;flex-direction:column;gap:6px;}
+.logentry{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--stroke-1);border-radius:var(--r);padding:12px 14px;}
+.logentry .lt{font-size:11px;color:var(--ink-3);flex-shrink:0;padding-top:2px;min-width:46px;}
+.logentry .lx{font-size:14px;color:var(--ink-1);line-height:1.5;flex:1;white-space:pre-wrap;min-width:0;}
+.logentry .lrm{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:15px;line-height:1;opacity:.5;}
+.logentry .lrm:hover{opacity:1;color:var(--signal);}
+.jg{padding:12px 0;border-top:1px solid var(--stroke-1);}
+.jgh{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:var(--fw-sb);color:var(--ink-2);margin-bottom:5px;}
+.jgb{font-size:13.5px;color:var(--ink-2);line-height:1.5;}
+.jkn{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2);line-height:1.6;}
+/* idea category */
+.catsel{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.catlbl{font-size:11px;color:var(--ink-3);}
+.segbtn{height:30px;padding:0 13px;border-radius:var(--pill);border:1px solid var(--stroke-2);background:var(--card);font:inherit;font-size:12px;color:var(--ink-2);cursor:pointer;transition:all var(--dur) var(--ease);}
+.segbtn.on{background:var(--ink-1);color:var(--paper);border-color:var(--ink-1);}
+.catt{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:var(--fw-sb);padding:2px 7px;border-radius:4px;margin-right:8px;vertical-align:middle;}
+.catt-plaud{background:var(--ink-1);color:var(--paper);}
+.catt-ext{background:transparent;border:1px solid var(--stroke-3);color:var(--ink-3);}
+/* audit / known issues */
+.audit{display:flex;flex-direction:column;gap:8px;}
+.aud{background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;}
+.sev{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:var(--pill);white-space:nowrap;margin-top:2px;}
+.sev-high{background:rgba(255,74,28,.14);color:var(--signal);}
+.sev-med{background:rgba(184,134,11,.18);color:#B8860B;}
+.sev-low{background:var(--hover);color:var(--ink-3);}
+.aud .at{font-size:15px;color:var(--ink-1);line-height:1.35;}
+.aud .ad{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:5px;}
+.aud .af{font-size:12.5px;color:var(--ink-3);line-height:1.5;margin-top:8px;}
+.aud .af b{color:var(--ink-2);font-weight:var(--fw-sb);}
+/* markdown (context/handoff) */
+.mdbody{max-width:680px;}
+.mdbody .mdh1{font-size:24px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 14px;}
+.mdbody h3{font-size:16px;font-weight:var(--fw-sb);margin:24px 0 8px;color:var(--ink-1);}
+.mdbody h4{font-size:12px;font-weight:var(--fw-sb);margin:16px 0 6px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;}
+.mdbody p{font-size:14px;color:var(--ink-2);line-height:1.6;margin:0 0 10px;}
+.mdbody ul{margin:0 0 12px;padding-left:20px;}
+.mdbody li{font-size:14px;color:var(--ink-2);line-height:1.6;margin-bottom:4px;}
+.mdbody code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--warm);border:1px solid var(--stroke-1);border-radius:4px;padding:1px 5px;}
+.mdbody b{color:var(--ink-1);font-weight:var(--fw-sb);}
 .sb-item svg{width:15px;height:15px;color:var(--ink-3);flex-shrink:0;}
 .sb-item.active svg{color:var(--ink-1);}
 .sb-spacer{flex:1;}
@@ -261,6 +311,9 @@ svg{display:block;}
   .themebtn{width:auto;margin-top:0;}
   .mainwrap{padding:26px 20px 64px;}
   .strip{grid-template-columns:1fr;}
+  .tiles{grid-template-columns:repeat(2,1fr);}
+  .aud{grid-template-columns:1fr;}
+  .aud .sev{justify-self:start;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 </style>
@@ -269,6 +322,7 @@ svg{display:block;}
   <div class="gate-card">
     <img class="gate-logo light-only" src="data:image/png;base64,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" alt="Plaud">
     <img class="gate-logo dark-only" src="data:image/png;base64,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" alt="Plaud">
+    <div class="gate-rule"></div>
     <h2>This board is private.</h2>
     <p>Enter the passcode to continue.</p>
     <form id="gate-form" autocomplete="off">
@@ -276,6 +330,7 @@ svg{display:block;}
       <button type="submit">Unlock</button>
       <div class="err" id="gate-err"></div>
     </form>
+    <div class="gate-hint">Community Operations · Volume I</div>
   </div>
 </div>
 
@@ -349,15 +404,19 @@ var ICONS={
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>',
  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>',
  bulb:'<path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.3 1 2.5h6c0-1.2.3-1.8 1-2.5A6 6 0 0 0 12 3Z"/>',
+ log:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M9 15l2 2 3.5-3.5"/>',
+ shield:'<path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3Z"/><path d="M9.3 12l1.8 1.8L15 10"/>',
+ book:'<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2V4Z"/><path d="M5 18h13"/>',
  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
  dotgrid:'<circle cx="5" cy="5" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="19" cy="5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="19" r="1.4"/><circle cx="12" cy="19" r="1.4"/><circle cx="19" cy="19" r="1.4"/>'
 };
 function icon(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||"")+'</svg>';}
 
 var state=load();
-function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[]};}
+function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{}};}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
 var view={sec:"home",week:null,obj:null,status:"all"};
+var ideaCat="plaud",ideaFilter="all";
 
 function plan(){return SEED.map(function(w){var c=(state.custom[w.id]||[]).map(function(t){return{id:t.id,obj:t.obj||"",pillar:t.pillar||"Mine",text:t.text,move:t.move||"",custom:true,wk:w.id};});return{id:w.id,num:w.num,title:w.title,dates:w.dates,tasks:w.tasks.map(function(t){return Object.assign({wk:w.id},t);}).concat(c)};});}
 function tstate(id){return state.s[id]||"open";}
@@ -413,10 +472,14 @@ function renderSidebar(){
    h+='<button class="sb-item'+(view.sec==="obj"&&view.obj===o?" active":"")+'" data-nav="obj" data-obj="'+o+'"><span class="cdot" style="background:'+OBJ_COLOR[o]+'"></span><span class="lab">Obj '+o+' · '+OBJ_NAME[o]+'</span><span class="cnt tnum">'+c.obj[o]+'</span></button>';
  });
  h+='<div class="sb-head">Hub</div>';
+ h+=item("journal","",'log',"Daily log",'<span class="cnt tnum">'+logCountToday()+'</span>',view.sec==="journal");
  h+=item("ideas","",'bulb',"Idea bank",'<span class="cnt tnum">'+(state.ideas?state.ideas.length:0)+'</span>',view.sec==="ideas");
  h+=item("briefs","",'spark',"Program briefs",'<span class="cnt tnum">'+(state.briefs?state.briefs.length:0)+'</span>',view.sec==="briefs");
  h+=item("notes","",'note',"Running note","",view.sec==="notes");
  h+=item("ship","",'ship',"How this ships","",view.sec==="ship");
+ h+='<div class="sb-head">System</div>';
+ h+=item("audit","",'shield',"Known issues",'<span class="cnt tnum">'+AUDIT.length+'</span>',view.sec==="audit");
+ h+=item("context","",'book',"Context / handoff","",view.sec==="context");
  h+='<div class="sb-spacer"></div>';
  h+='<div class="sb-foot"><div class="frow"><span>Overall</span><span class="pct tnum">'+pct+'%</span></div><div class="sb-mini"><i style="width:'+pct+'%"></i></div></div>';
  var dark=curTheme()==="dark";
@@ -507,16 +570,107 @@ function renderMain(){
      +'<div class="p">Open questions. The LinkedIn channel idea, if it\'s still on your mind.</div>'
    +'</div>';
    h+='<textarea class="note-field" id="jot" placeholder="Start jotting. Saves as you type — only on this device."></textarea><p class="note-status" id="jot-status"></p>';
+ }else if(view.sec==="journal"){
+   h+=journalHTML();
  }else if(view.sec==="ideas"){
    h+=ideasHTML();
  }else if(view.sec==="briefs"){
    h+=briefsHTML();
  }else if(view.sec==="ship"){
    h+=shipHTML();
+ }else if(view.sec==="audit"){
+   h+=auditHTML();
+ }else if(view.sec==="context"){
+   h+=contextHTML();
  }
  m.innerHTML=h;
  if(view.sec==="notes")initNotes();
  if(view.sec==="ideas"){initIdeas();loadDigest();}
+ if(view.sec==="journal"){initJournal();loadJournal();}
+ if(view.sec==="context")loadContext();
+}
+
+/* ---------- daily log / journal ---------- */
+function dkey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function todayKey(){return dkey(new Date());}
+function logCountToday(){return ((state.log||{})[todayKey()]||[]).length;}
+function addLog(text){text=(text||"").trim();if(!text)return;if(!state.log)state.log={};var k=todayKey();if(!state.log[k])state.log[k]=[];state.log[k].push({id:"l"+Date.now().toString(36),ts:Date.now(),text:text});save();render();}
+function removeLog(date,id){if(state.log&&state.log[date]){state.log[date]=state.log[date].filter(function(x){return x.id!==id;});save();render();}}
+function logMetrics(){
+ var log=state.log||{},today=logCountToday(),week=0,now=new Date();
+ for(var i=0;i<7;i++){var dd=new Date(now);dd.setDate(now.getDate()-i);week+=(log[dkey(dd)]||[]).length;}
+ var streak=0;for(var j=0;;j++){var dj=new Date();dj.setDate(dj.getDate()-j);if((log[dkey(dj)]||[]).length>0)streak++;else break;}
+ var days=Object.keys(log).filter(function(x){return log[x].length>0;}).length;
+ return{today:today,week:week,streak:streak,days:days};
+}
+function tile(v,l){return '<div class="tile"><div class="tv tnum">'+v+'</div><div class="tl">'+l+'</div></div>';}
+function journalHTML(){
+ var k=todayKey(),entries=((state.log||{})[k]||[]).slice().sort(function(a,b){return b.ts-a.ts;}),m=logMetrics();
+ var items=entries.length?entries.map(function(e){
+   return '<div class="logentry"><span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span><button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+k+'" aria-label="Delete">×</button></div>';
+ }).join(""):'<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';
+ return '<div class="mhead"><div><span class="ovl">Hub · Daily log</span><h1>What did you do?</h1><p class="sub">Dump it raw — broken is fine. It gets synthesised into a sharp, goal-anchored read across day, week, and month.</p></div></div>'
+  +'<div class="tiles">'+tile(m.today,"Today")+tile(m.week,"Last 7 days")+tile(m.streak,"Day streak")+tile(m.days,"Days logged")+'</div>'
+  +'<textarea class="ideabox" id="logbox" placeholder="What did you do since last check-in?  (⌘/Ctrl + Enter)"></textarea>'
+  +'<div class="idea-actions"><button class="btn btn-pri" id="logadd">Log it</button><button class="btn btn-sec" id="logexport">Export log</button><span class="hint">'+k+'</span></div>'
+  +'<div id="journal-slot"></div>'
+  +'<div class="ovl" style="margin:26px 0 10px">Today</div><div class="loglist">'+items+'</div>';
+}
+function initJournal(){var b=document.getElementById("logbox");if(!b)return;b.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){addLog(b.value);b.value="";}});}
+function exportLog(){var log=state.log||{},keys=Object.keys(log).filter(function(x){return log[x].length;}).sort();if(!keys.length){toast("Nothing to export");return;}var md=keys.map(function(k){return "## "+k+"\n"+log[k].slice().sort(function(a,b){return a.ts-b.ts;}).map(function(e){return "- ["+new Date(e.ts).toLocaleTimeString()+"] "+e.text;}).join("\n");}).join("\n\n")+"\n";copyText(md,"Log copied");}
+function loadJournal(){var slot=document.getElementById("journal-slot");if(!slot)return;
+ try{fetch("journal.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+   if(!d||!document.getElementById("journal-slot"))return;var daily=d.daily||{};
+   var mets=(daily.metrics||[]).map(function(mt){return '<div class="tile"><div class="tv tnum">'+escapeHTML(String(mt.value))+'</div><div class="tl">'+escapeHTML(mt.label||"")+'</div></div>';}).join("");
+   var byg=(daily.by_goal||[]).map(function(g){return '<div class="jg"><div class="jgh">'+escapeHTML(g.goal||"")+'</div><div class="jgb">'+escapeHTML(g.did||"")+'</div></div>';}).join("");
+   var kn=(d.knowledge||[]).slice(0,6).map(function(x){return '<li>'+escapeHTML(x)+'</li>';}).join("");
+   var html='<div class="callout digest" style="display:block"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+icon("spark")+'<b>Synthesis</b><span class="hint" style="margin-left:auto">'+escapeHTML(d.updated||"")+'</span></div>';
+   if(daily.did)html+='<p style="font-size:14px;color:var(--ink-1);line-height:1.55;margin:0 0 14px">'+escapeHTML(daily.did)+'</p>';
+   if(mets)html+='<div class="tiles" style="margin:0 0 14px">'+mets+'</div>';
+   if(byg)html+=byg;
+   if(kn)html+='<div class="ovl" style="margin:14px 0 6px">Knowledge</div><ul class="jkn">'+kn+'</ul>';
+   document.getElementById("journal-slot").innerHTML=html+'</div>';
+ }).catch(function(){});}catch(e){}
+}
+
+/* ---------- known issues (self-audit) ---------- */
+var AUDIT=[
+ {sev:"high",title:"Passcode gate is client-side only.",detail:"The whole page ships to the browser, so anyone can view-source, use dev-tools to read the content, or set the unlock flag directly. The passcode only deters casual viewers — it is not real access control.",fix:"Enable Vercel Password Protection (server-side), or add basic-auth middleware / a serverless gate so content isn't sent until authenticated."},
+ {sev:"med",title:"All data lives in browser localStorage.",detail:"Ideas, daily log, notes, briefs and task state are per-device and per-browser. Clearing site data or switching devices loses everything; nothing is backed up.",fix:"Sync the store to the repo (or Notion), and add a one-click export / backup."},
+ {sev:"med",title:"Web capture can't reach the daily agent.",detail:"Entries typed in the web app stay in localStorage, which a scheduled agent can't read. Only repo files (ideas.md, log/) are agent-readable, so web-only entries are invisible to the digest until exported.",fix:"Unify capture on repo files (native popup / email ingest), or auto-export web entries to the repo."},
+ {sev:"low",title:"Passcode can't rotate without a redeploy.",detail:"The code's hash is baked into the client bundle, and there's no lockout on repeated attempts, so a short numeric code is brute-forceable offline.",fix:"Move auth server-side where the secret and rate-limiting live off the client."},
+ {sev:"low",title:"Images can't be stored in the web app.",detail:"localStorage is text-only and small (~5MB), so dropping screenshots into web capture isn't viable.",fix:"Route images through email/connector ingest and let a Claude run parse them into the knowledge base."}
+];
+function auditHTML(){
+ var rows=AUDIT.map(function(a){return '<div class="aud"><span class="sev sev-'+a.sev+'">'+a.sev+'</span><div><div class="at">'+escapeHTML(a.title)+'</div><div class="ad">'+escapeHTML(a.detail)+'</div><div class="af"><b>Fix —</b> '+escapeHTML(a.fix)+'</div></div></div>';}).join("");
+ return '<div class="mhead"><div><span class="ovl">System · Known issues</span><h1>Health check.</h1><p class="sub">Weaknesses I’ve spotted while building this. Nothing here is on fire — it’s a shared punch-list for when you want to harden things. We can open and fix them together.</p></div></div>'
+  +'<div class="audit">'+rows+'</div>';
+}
+
+/* ---------- context / handoff ---------- */
+function contextHTML(){
+ return '<div class="mhead"><div><span class="ovl">System · Context / handoff</span><h1>Project context.</h1><p class="sub">The living memory of this project — what it is, what’s built, the decisions, and what’s next. Kept current so nothing is lost between sessions. Source: HANDOFF.md in the repo.</p></div></div>'
+  +'<div id="context-slot"><div class="idea-empty">Loading context…</div></div>';
+}
+function loadContext(){var slot=document.getElementById("context-slot");if(!slot)return;
+ try{fetch("HANDOFF.md",{cache:"no-store"}).then(function(r){return r.ok?r.text():null;}).then(function(t){
+   if(!t||!document.getElementById("context-slot"))return;
+   document.getElementById("context-slot").innerHTML='<div class="doc mdbody">'+mdLite(t)+'</div>';
+ }).catch(function(){});}catch(e){}
+}
+function mdLite(md){
+ var lines=md.replace(/\r/g,"").split("\n"),out=[],inList=false;
+ function esc(s){return escapeHTML(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/`(.+?)`/g,"<code>$1</code>");}
+ lines.forEach(function(ln){
+   if(/^###\s/.test(ln)){if(inList){out.push("</ul>");inList=false;}out.push("<h4>"+esc(ln.replace(/^###\s/,""))+"</h4>");}
+   else if(/^##\s/.test(ln)){if(inList){out.push("</ul>");inList=false;}out.push("<h3>"+esc(ln.replace(/^##\s/,""))+"</h3>");}
+   else if(/^#\s/.test(ln)){if(inList){out.push("</ul>");inList=false;}out.push("<h2 class=\"mdh1\">"+esc(ln.replace(/^#\s/,""))+"</h2>");}
+   else if(/^[-*]\s/.test(ln)){if(!inList){out.push("<ul>");inList=true;}out.push("<li>"+esc(ln.replace(/^[-*]\s/,""))+"</li>");}
+   else if(ln.trim()===""){if(inList){out.push("</ul>");inList=false;}}
+   else{if(inList){out.push("</ul>");inList=false;}out.push("<p>"+esc(ln)+"</p>");}
+ });
+ if(inList)out.push("</ul>");
+ return out.join("");
 }
 
 /* ---------- program briefs (idea → brief) ---------- */
@@ -558,15 +712,23 @@ function briefsHTML(){
   +list;
 }
 
+function ichip(k,lab,n){return '<button class="chip'+(ideaFilter===k?" on":"")+'" data-ideafilter="'+k+'">'+lab+'<span class="k tnum">'+n+'</span></button>';}
 function ideasHTML(){
- var list=(state.ideas||[]).slice().sort(function(a,b){return b.ts-a.ts;});
+ var all=(state.ideas||[]).slice().sort(function(a,b){return b.ts-a.ts;});
+ var cP=all.filter(function(i){return (i.cat||"plaud")==="plaud";}).length,cE=all.filter(function(i){return i.cat==="external";}).length;
+ var list=ideaFilter==="all"?all:all.filter(function(i){return (i.cat||"plaud")===ideaFilter;});
  var items=list.length?list.map(function(i){
-   return '<div class="idea"><div class="t">'+escapeHTML(i.text)+'</div><div class="m"><span class="tnum">'+new Date(i.ts).toLocaleString()+'</span><button class="lnk" data-brief="'+i.id+'">→ Draft brief</button><button data-rmidea="'+i.id+'">Delete</button></div></div>';
- }).join(""):'<div class="idea-empty">No ideas yet. Drop the first one above — half-formed is welcome.</div>';
- return '<div class="mhead"><div><span class="ovl">Hub · Idea bank</span><h1>Idea bank.</h1><p class="sub">Drop anything, anytime — half-formed is fine. Stored on this device. Export to hand the batch to a daily read.</p></div></div>'
+   var cat=i.cat==="external"?'<span class="catt catt-ext">External</span>':'<span class="catt catt-plaud">Plaud</span>';
+   return '<div class="idea"><div class="t">'+cat+escapeHTML(i.text)+'</div><div class="m"><span class="tnum">'+new Date(i.ts).toLocaleString()+'</span><button class="lnk" data-brief="'+i.id+'">→ Draft brief</button><button data-rmidea="'+i.id+'">Delete</button></div></div>';
+ }).join(""):'<div class="idea-empty">Nothing in this filter yet.</div>';
+ var catsel='<div class="catsel"><span class="catlbl">Tag as</span><button class="segbtn'+(ideaCat==="plaud"?" on":"")+'" data-setcat="plaud">Plaud signal</button><button class="segbtn'+(ideaCat==="external"?" on":"")+'" data-setcat="external">External idea</button></div>';
+ var chips='<div class="chips" style="margin-top:18px">'+ichip("all","All",all.length)+ichip("plaud","Plaud signal",cP)+ichip("external","External",cE)+'</div>';
+ return '<div class="mhead"><div><span class="ovl">Hub · Idea bank</span><h1>Idea bank.</h1><p class="sub">Drop anything — half-formed is fine. Tag it Plaud signal (internal) or External (other brands / products). Stored on this device.</p></div></div>'
+ +catsel
  +'<textarea class="ideabox" id="ideabox" placeholder="Drop an idea…  (⌘/Ctrl + Enter to save)"></textarea>'
- +'<div class="idea-actions"><button class="btn btn-pri" id="ideaadd">Save idea</button><button class="btn btn-sec" id="ideaexport">Export all</button><span class="hint" id="ideahint">'+list.length+' saved</span></div>'
+ +'<div class="idea-actions"><button class="btn btn-pri" id="ideaadd">Save idea</button><button class="btn btn-sec" id="ideaexport">Export all</button><span class="hint" id="ideahint">'+all.length+' saved</span></div>'
  +'<div id="digest-slot"><div class="callout digest">'+icon("spark")+'<div><b>Daily read.</b> A scheduled run reads your ideas each morning and posts a short interpretation plus a few concrete programs worth doing next.</div></div></div>'
+ +chips
  +'<div class="idea-list">'+items+'</div>';
 }
 /* Daily read: the deployed site fetches digest.json (written by the daily agent). */
@@ -581,7 +743,7 @@ function loadDigest(){
  }catch(e){}
 }
 function escapeHTML(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function addIdea(txt){txt=(txt||"").trim();if(!txt)return;if(!state.ideas)state.ideas=[];state.ideas.push({id:"i"+Date.now().toString(36),text:txt,ts:Date.now()});save();render();}
+function addIdea(txt){txt=(txt||"").trim();if(!txt)return;if(!state.ideas)state.ideas=[];state.ideas.push({id:"i"+Date.now().toString(36),text:txt,ts:Date.now(),cat:ideaCat});save();render();}
 function removeIdea(id){state.ideas=(state.ideas||[]).filter(function(i){return i.id!==id;});save();render();}
 function initIdeas(){
  var box=document.getElementById("ideabox");if(!box)return;
@@ -666,6 +828,11 @@ document.addEventListener("click",function(e){
  var ia=e.target.closest("#ideaadd");if(ia){var box=document.getElementById("ideabox");if(box){addIdea(box.value);box.value="";}return;}
  var ix=e.target.closest("#ideaexport");if(ix){exportIdeas();return;}
  var ir=e.target.closest("[data-rmidea]");if(ir){removeIdea(ir.getAttribute("data-rmidea"));return;}
+ var sc=e.target.closest("[data-setcat]");if(sc){ideaCat=sc.getAttribute("data-setcat");render();return;}
+ var iflt=e.target.closest("[data-ideafilter]");if(iflt){ideaFilter=iflt.getAttribute("data-ideafilter");render();return;}
+ var la=e.target.closest("#logadd");if(la){var lb=document.getElementById("logbox");if(lb){addLog(lb.value);lb.value="";}return;}
+ var lex=e.target.closest("#logexport");if(lex){exportLog();return;}
+ var lr=e.target.closest("[data-rmlog]");if(lr){removeLog(lr.getAttribute("data-logdate"),lr.getAttribute("data-rmlog"));return;}
  var db=e.target.closest("[data-brief]");if(db){var di=(state.ideas||[]).filter(function(i){return i.id===db.getAttribute("data-brief");})[0];addBrief(di?di.text:"");view.sec="briefs";render();window.scrollTo(0,0);return;}
  var bfi=e.target.closest("#brief-from-idea");if(bfi){var sel=document.getElementById("brief-src-pick"),iid=sel?sel.value:"";var i2=(state.ideas||[]).filter(function(i){return i.id===iid;})[0];addBrief(i2?i2.text:"");render();window.scrollTo(0,0);return;}
  var bbl=e.target.closest("#brief-blank");if(bbl){addBrief("");render();window.scrollTo(0,0);return;}
