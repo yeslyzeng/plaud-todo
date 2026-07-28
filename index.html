@@ -180,6 +180,21 @@ svg{display:block;}
 .aud .ad{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:5px;}
 .aud .af{font-size:12.5px;color:var(--ink-3);line-height:1.5;margin-top:8px;}
 .aud .af b{color:var(--ink-2);font-weight:var(--fw-sb);}
+/* radar */
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.tcard{background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:20px 22px;}
+.tcard-h{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.tname{font-size:19px;font-weight:var(--fw-reg);letter-spacing:-0.01em;color:var(--ink-1);}
+.tkind{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--fw-sb);color:var(--ink-3);border:1px solid var(--stroke-2);border-radius:var(--pill);padding:3px 9px;}
+.twhy{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin:0 0 14px;}
+.tlinks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.tlink{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-1);text-decoration:none;border:1px solid var(--stroke-2);border-radius:var(--r);padding:6px 12px;transition:border-color var(--dur) var(--ease);}
+.tlink:hover{border-color:var(--stroke-3);}
+.tlink svg{width:13px;height:13px;color:var(--ink-3);}
+.tnote label{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--fw-sb);color:var(--ink-3);margin-bottom:7px;}
+.tnote textarea{width:100%;box-sizing:border-box;min-height:70px;resize:vertical;background:var(--warm);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:13.5px;line-height:1.5;padding:11px 13px;}
+.tnote textarea:focus{outline:none;border-color:var(--ink-1);}
+.tnote textarea::placeholder{color:var(--ink-4);}
 /* channels */
 .channels{margin:0 0 30px;}
 .ch-head{display:block;margin:0 0 12px;}
@@ -396,6 +411,7 @@ svg{display:block;}
   .aud .sev{justify-self:start;}
   .nsaxes{grid-template-columns:1fr;}
   .chgrid{grid-template-columns:1fr;}
+  .tgrid{grid-template-columns:1fr;}
   .anti{grid-template-columns:1fr;}
   .kr{grid-template-columns:1fr;}
   .krw{text-align:left;}
@@ -490,13 +506,14 @@ var ICONS={
  chev:'<path d="M9 6l6 6-6 6"/>',
  star:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z"/>',
  ext:'<path d="M7 17L17 7"/><path d="M8 7h9v9"/>',
+ target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/>',
  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
  dotgrid:'<circle cx="5" cy="5" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="19" cy="5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="19" r="1.4"/><circle cx="12" cy="19" r="1.4"/><circle cx="19" cy="19" r="1.4"/>'
 };
 function icon(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||"")+'</svg>';}
 
 var state=load();
-function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{}};}
+function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};if(!o.targetNotes)o.targetNotes={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{},targetNotes:{}};}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
 var view={sec:"home",week:null,obj:null,status:"all"};
 var ideaCat="plaud",ideaFilter="all";
@@ -565,6 +582,7 @@ function renderSidebar(){
  var hubItems=item("journal","",'log',"Daily log",'<span class="cnt tnum">'+logCountToday()+'</span>',view.sec==="journal")
    +item("ideas","",'bulb',"Idea bank",'<span class="cnt tnum">'+(state.ideas?state.ideas.length:0)+'</span>',view.sec==="ideas")
    +item("briefs","",'spark',"Program briefs",'<span class="cnt tnum">'+(state.briefs?state.briefs.length:0)+'</span>',view.sec==="briefs")
+   +item("radar","",'target',"Radar",'<span class="cnt tnum">'+TARGETS.length+'</span>',view.sec==="radar")
    +item("notes","",'note',"Running note","",view.sec==="notes")
    +item("ship","",'ship',"How this ships","",view.sec==="ship");
  h+=sbGroup("hub","Hub",hubItems);
@@ -635,6 +653,25 @@ function strip(){
  return '<div class="strip"><div class="focus">'+fo+'</div><div class="prog"><div class="ring">'+ring(pct)+'<div><div class="pct tnum">'+pct+'%</div><div class="cnt tnum">'+c.done+' / '+c.total+' moves</div></div></div><div class="wk">'+wbars+'</div></div></div>';
 }
 
+/* ---------- radar (target tracking) ---------- */
+var TARGETS=[
+ {id:"heypocket",name:"Heypocket",kind:"Competitor",why:"Closest product analog \u2014 watch positioning, pricing, and launch cadence.",links:[
+   {label:"X",url:"https://x.com/Heypocket"},
+   {label:"Website",url:"https://heypocket.com"}
+ ]}
+];
+function radarHTML(){
+ var cards=TARGETS.map(function(t){
+   var links=t.links.map(function(l){return '<a class="tlink" href="'+l.url+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(l.label)+icon("ext")+'</a>';}).join("");
+   var note=(state.targetNotes&&state.targetNotes[t.id])||"";
+   return '<div class="tcard"><div class="tcard-h"><span class="tname">'+escapeHTML(t.name)+'</span><span class="tkind">'+escapeHTML(t.kind)+'</span></div>'
+     +(t.why?'<p class="twhy">'+escapeHTML(t.why)+'</p>':'')
+     +'<div class="tlinks">'+links+'</div>'
+     +'<div class="tnote"><label>What you\u2019re tracking</label><textarea data-tnote="'+t.id+'" placeholder="Signals, changes, things worth noticing\u2026">'+escapeHTML(note)+'</textarea></div>'
+   +'</div>';
+ }).join("");
+ return '<div class="mhead"><div><span class="ovl">Hub \u00b7 Radar</span><h1>Radar.</h1><p class="sub">Targets worth watching \u2014 competitors, references, anyone with signal. Each collects its own stream of what you notice. Tell me new ones to add.</p></div></div><div class="tgrid">'+cards+'</div>';
+}
 /* ---------- channels (quick links) ---------- */
 var CHANNELS=[
  {group:"Discord",items:[
@@ -643,10 +680,6 @@ var CHANNELS=[
  ]},
  {group:"Reddit",items:[
    {name:"r/PLAUDAI",url:"https://www.reddit.com/r/PLAUDAI/"}
- ]},
- {group:"Competitor board",items:[
-   {name:"Heypocket \u00b7 X",url:"https://x.com/Heypocket"},
-   {name:"Heypocket \u00b7 Now",url:"https://heypocket.com/pages/now"}
  ]}
 ];
 function channelsHTML(){
@@ -688,6 +721,8 @@ function renderMain(){
    h+='<textarea class="note-field" id="jot" placeholder="Start jotting. Saves as you type — only on this device."></textarea><p class="note-status" id="jot-status"></p>';
  }else if(view.sec==="northstar"){
    h+=northstarHTML();
+ }else if(view.sec==="radar"){
+   h+=radarHTML();
  }else if(view.sec==="journal"){
    h+=journalHTML();
  }else if(view.sec==="ideas"){
@@ -1042,7 +1077,7 @@ document.addEventListener("click",function(e){
  var tb=e.target.closest("#themebtn");if(tb){var next=curTheme()==="dark"?"light":"dark";applyTheme(next);try{localStorage.setItem(THEME,next);}catch(e2){}renderSidebar();return;}
 });
 document.addEventListener("keydown",function(e){if(e.key==="Enter"){var inp=e.target.closest("[data-add]");if(inp){addCustom(inp.getAttribute("data-add"),inp.value);inp.value="";}}});
-document.addEventListener("input",function(e){var f=e.target.closest("[data-bfield]");if(f){updateBrief(f.getAttribute("data-bid"),f.getAttribute("data-bfield"),f.value);}});
+document.addEventListener("input",function(e){var f=e.target.closest("[data-bfield]");if(f){updateBrief(f.getAttribute("data-bid"),f.getAttribute("data-bfield"),f.value);return;}var tn=e.target.closest("[data-tnote]");if(tn){if(!state.targetNotes)state.targetNotes={};state.targetNotes[tn.getAttribute("data-tnote")]=tn.value;save();}});
 
 function render(){renderSidebar();renderMain();}
 initTheme();initGate();render();
