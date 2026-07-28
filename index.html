@@ -119,16 +119,16 @@ svg{display:block;}
 .gate-mark{height:54px;width:auto;margin:0 auto 2px;}
 .gate-rule{width:34px;height:2px;background:var(--grad-ai);margin:22px auto 26px;border-radius:2px;}
 .gate h2{font-size:20px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 6px;}
-.gate-title{font-size:24px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 6px;}
+.gate-title{font-size:24px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 24px;}
 .gate-at{background:var(--grad-ai);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .gate-sub{font-size:14px;color:var(--ink-3);font-style:italic;margin:0 0 26px;}
 .gate p{font-size:13px;color:var(--ink-3);margin:0 0 24px;line-height:1.5;}
 .gate form{display:flex;flex-direction:column;gap:16px;}
-.gate input{height:46px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:16px;padding:0 16px;text-align:center;letter-spacing:.3em;transition:border-color var(--dur) var(--ease);}
-.gate input::placeholder{letter-spacing:.14em;color:var(--ink-4);}
+.gate input{width:100%;box-sizing:border-box;height:44px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:15px;padding:0 14px;text-align:center;letter-spacing:.04em;transition:border-color var(--dur) var(--ease);}
+.gate input::placeholder{letter-spacing:.02em;color:var(--ink-4);}
 .gate input:focus{outline:none;border-color:var(--ink-1);}
-.gate button{height:46px;background:var(--ink-1);color:var(--paper);border:none;border-radius:var(--pill);font:inherit;font-size:13.5px;font-weight:var(--fw-sb);cursor:pointer;transition:opacity var(--dur-fast) var(--ease);}
-.gate button:hover{opacity:.9;}
+.gate button{width:100%;height:44px;background:var(--ink-1);color:var(--paper);border:none;border-radius:var(--r);font:inherit;font-size:14px;font-weight:var(--fw-sb);cursor:pointer;transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur) var(--ease);}
+.gate button:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
 .gate button:active{transform:scale(.99);}
 .gate .err{font-size:12px;color:var(--signal);min-height:16px;margin-top:2px;}
 .nsgate-full{min-height:66vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px 0;}
@@ -138,10 +138,10 @@ svg{display:block;}
 .nsgate-p{font-size:14px;color:var(--ink-3);line-height:1.5;margin:0 0 24px;}
 .nsgate{max-width:360px;}
 .nsgate-card form{display:flex;flex-direction:column;gap:14px;}
-.nsgate-card input{width:100%;box-sizing:border-box;height:46px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:16px;padding:0 16px;letter-spacing:.12em;text-align:center;}
+.nsgate-card input{width:100%;box-sizing:border-box;height:44px;background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:15px;padding:0 14px;letter-spacing:.04em;text-align:center;}
 .nsgate-card input::placeholder{letter-spacing:.04em;color:var(--ink-4);}
 .nsgate-card input:focus{outline:none;border-color:var(--ink-1);}
-.nsgate-card button{width:100%;height:46px;justify-content:center;}
+.nsgate-card button{width:100%;height:44px;border-radius:var(--r);font-size:14px;justify-content:center;}
 .nsgate-card .err{font-size:12px;color:var(--signal);min-height:16px;}
 .gate-hint{font-size:11px;color:var(--ink-4);margin-top:18px;letter-spacing:.02em;}
 
@@ -392,7 +392,6 @@ svg{display:block;}
 <div class="gate" id="gate">
   <div class="gate-card">
     <h2 class="gate-title">Pinyan’s To-Do <span class="gate-at">@Plaud</span></h2>
-    <p class="gate-sub">we’ll get there.</p>
     <form id="gate-form" autocomplete="off">
       <input id="gate-input" type="password" inputmode="numeric" placeholder="Passcode" aria-label="Passcode">
       <button type="submit">Open sesame</button>
