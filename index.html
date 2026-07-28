@@ -180,6 +180,19 @@ svg{display:block;}
 .aud .ad{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:5px;}
 .aud .af{font-size:12.5px;color:var(--ink-3);line-height:1.5;margin-top:8px;}
 .aud .af b{color:var(--ink-2);font-weight:var(--fw-sb);}
+/* channels */
+.channels{margin:0 0 30px;}
+.ch-head{display:block;margin:0 0 12px;}
+.chgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.chcard{background:var(--card);border:1px solid var(--stroke-2);border-radius:var(--r-lg);padding:14px 16px;}
+.chh{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:var(--fw-sb);color:var(--ink-3);margin-bottom:8px;}
+.chlink{display:flex;align-items:center;gap:8px;padding:9px 0;font-size:14px;color:var(--ink-1);text-decoration:none;border-top:1px solid var(--stroke-1);transition:color var(--dur) var(--ease);}
+.chcard .chlink:first-of-type{border-top:none;}
+.chlink:hover{color:var(--ink-3);}
+.chlink .cn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chlink svg{width:14px;height:14px;color:var(--ink-4);flex-shrink:0;}
+.chlink-off{color:var(--ink-4);}
+.cmiss{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);border:1px dashed var(--stroke-3);border-radius:3px;padding:1px 6px;}
 /* markdown (context/handoff) */
 .mdbody{max-width:680px;}
 .mdbody .mdh1{font-size:24px;font-weight:var(--fw-reg);letter-spacing:-0.01em;margin:0 0 14px;}
@@ -382,6 +395,7 @@ svg{display:block;}
   .aud{grid-template-columns:1fr;}
   .aud .sev{justify-self:start;}
   .nsaxes{grid-template-columns:1fr;}
+  .chgrid{grid-template-columns:1fr;}
   .anti{grid-template-columns:1fr;}
   .kr{grid-template-columns:1fr;}
   .krw{text-align:left;}
@@ -475,6 +489,7 @@ var ICONS={
  book:'<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2V4Z"/><path d="M5 18h13"/>',
  chev:'<path d="M9 6l6 6-6 6"/>',
  star:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z"/>',
+ ext:'<path d="M7 17L17 7"/><path d="M8 7h9v9"/>',
  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
  dotgrid:'<circle cx="5" cy="5" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="19" cy="5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="19" r="1.4"/><circle cx="12" cy="19" r="1.4"/><circle cx="19" cy="19" r="1.4"/>'
 };
@@ -620,11 +635,36 @@ function strip(){
  return '<div class="strip"><div class="focus">'+fo+'</div><div class="prog"><div class="ring">'+ring(pct)+'<div><div class="pct tnum">'+pct+'%</div><div class="cnt tnum">'+c.done+' / '+c.total+' moves</div></div></div><div class="wk">'+wbars+'</div></div></div>';
 }
 
+/* ---------- channels (quick links) ---------- */
+var CHANNELS=[
+ {group:"Discord",items:[
+   {name:"Plaud Server",url:"https://discord.gg/j5EjaZAx"},
+   {name:"Plaud Builder Server",url:""}
+ ]},
+ {group:"Reddit",items:[
+   {name:"r/PLAUDAI",url:"https://www.reddit.com/r/PLAUDAI/"}
+ ]},
+ {group:"Competitor board",items:[
+   {name:"Heypocket \u00b7 X",url:"https://x.com/Heypocket"},
+   {name:"Heypocket \u00b7 Now",url:"https://heypocket.com/pages/now"}
+ ]}
+];
+function channelsHTML(){
+ var groups=CHANNELS.map(function(g){
+   var links=g.items.map(function(it){
+     if(!it.url) return '<span class="chlink chlink-off"><span class="cn">'+escapeHTML(it.name)+'</span><span class="cmiss">link?</span></span>';
+     return '<a class="chlink" href="'+it.url+'" target="_blank" rel="noopener noreferrer"><span class="cn">'+escapeHTML(it.name)+'</span>'+icon("ext")+'</a>';
+   }).join("");
+   return '<div class="chcard"><div class="chh">'+escapeHTML(g.group)+'</div>'+links+'</div>';
+ }).join("");
+ return '<div class="channels"><div class="ch-head ovl">Channels \u00b7 where the work lives</div><div class="chgrid">'+groups+'</div></div>';
+}
 function renderMain(){
  var m=document.getElementById("main"),h="";
  if(view.sec==="home"){
    h+='<div class="mhead"><div><span class="ovl">Onboarding · Volume I</span><h1>First four weeks.</h1><p class="sub">A living board — every move carries a proactive next step. Tap a status dot to cycle open → in progress → done.</p></div></div>';
    h+=strip();
+   h+=channelsHTML();
    h+=viewTasksHTML(allTasks(),{groupByWeek:true});
  }else if(view.sec==="week"){
    var w=SEED.filter(function(x){return x.id===view.week;})[0];
