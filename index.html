@@ -152,6 +152,9 @@ svg{display:block;}
 .tl{font-size:11px;color:var(--ink-3);margin-top:6px;}
 /* log entries */
 .loglist{display:flex;flex-direction:column;gap:6px;}
+.logday{margin-top:18px;}
+.logday-h{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:var(--fw-sb);color:var(--ink-2);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--stroke-1);}
+.logday-c{margin-left:auto;font-size:11px;color:var(--ink-3);}
 .logentry{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--stroke-1);border-radius:var(--r);padding:12px 14px;}
 .logentry .lt{font-size:11px;color:var(--ink-3);flex-shrink:0;padding-top:2px;min-width:46px;}
 .logentry .lx{font-size:14px;color:var(--ink-1);line-height:1.5;flex:1;white-space:pre-wrap;min-width:0;}
@@ -196,6 +199,17 @@ svg{display:block;}
 .tnote textarea{width:100%;box-sizing:border-box;min-height:70px;resize:vertical;background:var(--warm);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:13.5px;line-height:1.5;padding:11px 13px;}
 .tnote textarea:focus{outline:none;border-color:var(--ink-1);}
 .tnote textarea::placeholder{color:var(--ink-4);}
+.tshots{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:14px;}
+.tshot{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--stroke-2);aspect-ratio:4/3;background:var(--warm);}
+.tshot img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in;}
+.tshot .cap{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;font-size:11px;color:#fff;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.55));line-height:1.35;pointer-events:none;}
+.tshot .rm{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.55);color:#fff;border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;opacity:0;transition:opacity var(--dur) var(--ease);}
+.tshot:hover .rm{opacity:1;}
+.tshot-add{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:transparent;border:1px dashed var(--stroke-3);color:var(--ink-3);cursor:pointer;font:inherit;font-size:11px;letter-spacing:.05em;text-transform:uppercase;}
+.tshot-add:hover{color:var(--ink-1);border-color:var(--ink-3);}
+.tshot-add .plus{font-size:22px;line-height:1;font-weight:var(--fw-reg);}
+.imgview{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:9999;padding:40px;cursor:zoom-out;}
+.imgview img{max-width:100%;max-height:100%;border-radius:var(--r);}
 /* channels */
 .channels{margin:0 0 30px;}
 .ch-head{display:block;margin:0 0 12px;}
@@ -562,8 +576,8 @@ var ICONS={
 function icon(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||"")+'</svg>';}
 
 var state=load();
-function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};if(!o.targetNotes)o.targetNotes={};if(!o.taskLog)o.taskLog={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{},targetNotes:{},taskLog:{}};}
-function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
+function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};if(!o.targetNotes)o.targetNotes={};if(!o.taskLog)o.taskLog={};if(!o.targetShots)o.targetShots={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{},targetNotes:{},taskLog:{},targetShots:{}};}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state));return true;}catch(e){try{toast("Storage full — image too big?");}catch(e2){}return false;}}
 var view={sec:"home",week:null,obj:null,status:"all"};
 var ideaCat="plaud",ideaFilter="all";
 var groupOpen={hub:false,system:false,strategy:false};
@@ -717,13 +731,26 @@ function strip(){
  return '<div class="strip"><div class="focus">'+fo+'</div><div class="prog"><div class="ring">'+ring(pct)+'<div><div class="pct tnum">'+pct+'%</div><div class="cnt tnum">'+c.done+' / '+c.total+' moves</div></div></div><div class="wk">'+wbars+'</div></div></div>';
 }
 
-/* ---------- radar (target tracking) ---------- */
+/* ---------- radar (target tracking + reference-image gallery) ---------- */
 var TARGETS=[
  {id:"heypocket",name:"Heypocket",kind:"Competitor",why:"Closest product analog \u2014 watch positioning, pricing, and launch cadence.",links:[
    {label:"X",url:"https://x.com/Heypocket"},
    {label:"Website",url:"https://heypocket.com"}
+ ]},
+ {id:"granola",name:"Granola",kind:"Reference \u00b7 knowledge base",why:"Adjacent taste \u2014 note-taking for meetings. Study their product storytelling, artist collabs, tactile launch moments.",links:[
+   {label:"Website",url:"https://www.granola.ai"},
+   {label:"X",url:"https://x.com/meetgranola"}
  ]}
 ];
+function shotsHTML(tid){
+ var shots=(state.targetShots&&state.targetShots[tid])||[];
+ var items=shots.map(function(s){
+   var cap=s.cap?'<div class="cap">'+escapeHTML(s.cap)+'</div>':'';
+   return '<div class="tshot"><img src="'+s.data+'" data-imgview alt="'+escapeHTML(s.cap||"")+'">'+cap+'<button class="rm" data-shotrm="'+s.id+'" data-shottid="'+tid+'" aria-label="Remove image">\u00d7</button></div>';
+ }).join("");
+ var add='<label class="tshot tshot-add" title="Attach an image"><span class="plus">+</span><span>attach image</span><input type="file" accept="image/*" data-shotin="'+tid+'" style="display:none"></label>';
+ return '<div class="tshots">'+items+add+'</div>';
+}
 function radarHTML(){
  var cards=TARGETS.map(function(t){
    var links=t.links.map(function(l){return '<a class="tlink" href="'+l.url+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(l.label)+icon("ext")+'</a>';}).join("");
@@ -732,9 +759,10 @@ function radarHTML(){
      +(t.why?'<p class="twhy">'+escapeHTML(t.why)+'</p>':'')
      +'<div class="tlinks">'+links+'</div>'
      +'<div class="tnote"><label>What you\u2019re tracking</label><textarea data-tnote="'+t.id+'" placeholder="Signals, changes, things worth noticing\u2026">'+escapeHTML(note)+'</textarea></div>'
+     +shotsHTML(t.id)
    +'</div>';
  }).join("");
- return '<div class="mhead"><div><span class="ovl">Hub \u00b7 Radar</span><h1>Radar.</h1><p class="sub">Targets worth watching \u2014 competitors, references, anyone with signal. Each collects its own stream of what you notice. Tell me new ones to add.</p></div></div><div class="tgrid">'+cards+'</div>';
+ return '<div class="mhead"><div><span class="ovl">Hub \u00b7 Radar</span><h1>Radar.</h1><p class="sub">Targets worth watching \u2014 competitors, references, anyone with signal. Each collects its own knowledge base: notes, links, and reference shots.</p></div></div><div class="tgrid">'+cards+'</div>';
 }
 /* ---------- channels (quick links) ---------- */
 var CHANNELS=[
@@ -844,28 +872,55 @@ function journalHTML(){
    return '<div class="logentry"><span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span><button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+k+'" aria-label="Delete">×</button></div>';
  }).join(""):'<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';
  return '<div class="mhead"><div><span class="ovl">Hub · Daily log</span><h1>What did you do?</h1><p class="sub">Dump it raw — broken is fine. It gets synthesised into a sharp, goal-anchored read across day, week, and month.</p></div></div>'
-  +'<div class="tiles"><div class="tile"><div class="tv tnum" id="tile-today">'+m.today+'</div><div class="tl">Today</div></div>'+tile(m.week,"Last 7 days")+tile(m.streak,"Day streak")+tile(m.days,"Days logged")+'</div>'
+  +'<div class="tiles"><div class="tile"><div class="tv tnum" id="tile-today">'+m.today+'</div><div class="tl">Today</div></div><div class="tile"><div class="tv tnum" id="tile-week">'+m.week+'</div><div class="tl">Last 7 days</div></div><div class="tile"><div class="tv tnum" id="tile-streak">'+m.streak+'</div><div class="tl">Day streak</div></div><div class="tile"><div class="tv tnum" id="tile-days">'+m.days+'</div><div class="tl">Days logged</div></div></div>'
   +'<textarea class="ideabox" id="logbox" placeholder="What did you do since last check-in?  (⌘/Ctrl + Enter)"></textarea>'
   +'<div class="idea-actions"><button class="btn btn-pri" id="logadd">Log it</button><button class="btn btn-sec" id="logexport">Export log</button><span class="hint">'+k+'</span></div>'
   +'<div id="journal-slot"></div>'
-  +'<div class="ovl" style="margin:26px 0 10px">Today</div><div class="loglist" id="loglist">'+items+'</div>';
+  +'<div class="ovl" style="margin:26px 0 10px">Today</div><div class="loglist" id="loglist">'+items+'</div>'
+  +'<div id="loghist"></div>';
 }
 function parseLogMd(txt){var out=[];(txt||"").split("\n").forEach(function(ln){var m=ln.match(/^-\s*\[(\d{1,2}:\d{2})\]\s*(.+?)\s*$/);if(m)out.push({time:m[1],text:m[2]});});return out;}
+function logEntryHTML(e,dateKey){
+ var t='<span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span>';
+ if(e.src==="device")return '<div class="logentry">'+t+'<button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+dateKey+'" aria-label="Delete">×</button></div>';
+ return '<div class="logentry"><span class="lsrc" title="Captured by a check-in popup">check-in</span>'+t+'</div>';
+}
+function dayHeading(k){var d=new Date(k+"T00:00:00");return d.toLocaleDateString([], {weekday:"short",month:"short",day:"numeric"});}
 function loadLogFiles(){
- var slot=document.getElementById("loglist");if(!slot)return;var k=todayKey();
- fetch("log/"+k+".md",{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).then(function(txt){
-   var s=document.getElementById("loglist");if(!s)return;
-   var fileEntries=parseLogMd(txt).map(function(e){var hm=e.time.split(":");var d=new Date();d.setHours(parseInt(hm[0],10),parseInt(hm[1],10),0,0);return{ts:d.getTime(),text:e.text,src:"file"};});
-   var fileTexts={};fileEntries.forEach(function(e){fileTexts[e.text.trim()]=1;});
-   var devEntries=((state.log||{})[k]||[]).filter(function(e){return !fileTexts[(e.text||"").trim()];}).map(function(e){return{ts:e.ts,text:e.text,id:e.id,src:"device"};});
-   var all=fileEntries.concat(devEntries).sort(function(a,b){return b.ts-a.ts;});
-   var tt=document.getElementById("tile-today");if(tt)tt.textContent=all.length;
-   if(!all.length){s.innerHTML='<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';return;}
-   s.innerHTML=all.map(function(e){
-     var t='<span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span>';
-     if(e.src==="device")return '<div class="logentry">'+t+'<button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+k+'" aria-label="Delete">×</button></div>';
-     return '<div class="logentry"><span class="lsrc" title="Captured by a check-in popup">check-in</span>'+t+'</div>';
-   }).join("");
+ if(!document.getElementById("loglist"))return;
+ var DAYS=14,dates=[];for(var i=0;i<DAYS;i++){var d=new Date();d.setDate(d.getDate()-i);dates.push(dkey(d));}
+ Promise.all(dates.map(function(k){
+   return fetch("log/"+k+".md",{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).then(function(t){return{k:k,entries:parseLogMd(t)};}).catch(function(){return{k:k,entries:[]};});
+ })).then(function(res){
+   if(!document.getElementById("loglist"))return;
+   var byDay={};
+   res.forEach(function(r){
+     var fe=r.entries.map(function(e){var hm=e.time.split(":");var dt=new Date(r.k+"T00:00:00");dt.setHours(parseInt(hm[0],10),parseInt(hm[1],10),0,0);return{ts:dt.getTime(),text:e.text,src:"file"};});
+     var ft={};fe.forEach(function(e){ft[e.text.trim()]=1;});
+     var dev=((state.log||{})[r.k]||[]).filter(function(e){return !ft[(e.text||"").trim()];}).map(function(e){return{ts:e.ts,text:e.text,id:e.id,src:"device"};});
+     var all=fe.concat(dev).sort(function(a,b){return b.ts-a.ts;});
+     if(all.length)byDay[r.k]=all;
+   });
+   /* fold in any localStorage-only days outside the window so nothing is hidden */
+   Object.keys(state.log||{}).forEach(function(k){if(!byDay[k]){var dev=(state.log[k]||[]);if(dev.length)byDay[k]=dev.map(function(e){return{ts:e.ts,text:e.text,id:e.id,src:"device"};}).sort(function(a,b){return b.ts-a.ts;});}});
+   var tk=todayKey();
+   /* Today */
+   var s=document.getElementById("loglist");
+   var todayEntries=byDay[tk]||[];
+   s.innerHTML=todayEntries.length?todayEntries.map(function(e){return logEntryHTML(e,tk);}).join(""):'<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';
+   /* Recent days */
+   var hist=document.getElementById("loghist");
+   if(hist){
+     var past=Object.keys(byDay).filter(function(k){return k!==tk;}).sort().reverse();
+     hist.innerHTML=past.length?('<div class="ovl" style="margin:26px 0 10px">Earlier</div>'+past.map(function(k){
+       return '<div class="logday"><div class="logday-h">'+escapeHTML(dayHeading(k))+'<span class="logday-c tnum">'+byDay[k].length+'</span></div><div class="loglist">'+byDay[k].map(function(e){return logEntryHTML(e,k);}).join("")+'</div></div>';
+     }).join('')):'';
+   }
+   /* Tiles from the durable union */
+   var now=new Date(),week=0;for(var w=0;w<7;w++){var dw=new Date(now);dw.setDate(now.getDate()-w);week+=(byDay[dkey(dw)]||[]).length;}
+   var streak=0;for(var j=0;;j++){var dj=new Date(now);dj.setDate(now.getDate()-j);if((byDay[dkey(dj)]||[]).length){streak++;}else if(j===0){continue;}else{break;}}
+   function setTile(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+   setTile("tile-today",todayEntries.length);setTile("tile-week",week);setTile("tile-streak",streak);setTile("tile-days",Object.keys(byDay).length);
  }).catch(function(){});
 }
 function initJournal(){var b=document.getElementById("logbox");if(!b)return;b.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){addLog(b.value);b.value="";}});}
@@ -1115,6 +1170,41 @@ function addCustom(wk,txt){txt=(txt||"").trim();if(!txt)return;pushCustom(wk,{id
 function addCustomFull(wk,d){if(!d||!d.title)return;pushCustom(wk,{id:wk+"-c"+Date.now().toString(36),obj:d.obj||"",pillar:"Mine",text:d.title,move:d.move||""});}
 function removeCustom(wk,id){if(state.custom[wk]){state.custom[wk]=state.custom[wk].filter(function(t){return t.id!==id;});delete state.s[id];save();render();}}
 
+/* ---------- radar shots (client-side image gallery) ---------- */
+var MAX_SHOT_BYTES=900*1024; /* ~1MB downsampled ceiling per image, keeps localStorage happy */
+function downscaleImage(file){
+ return new Promise(function(res,rej){
+   var fr=new FileReader();
+   fr.onload=function(){
+     var img=new Image();
+     img.onload=function(){
+       var maxW=1600,scale=Math.min(1,maxW/img.width);
+       var w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+       var cv=document.createElement("canvas");cv.width=w;cv.height=h;
+       var ctx=cv.getContext("2d");ctx.drawImage(img,0,0,w,h);
+       /* try quality steps until under the byte ceiling */
+       var out=null;var qs=[0.82,0.7,0.55,0.4];
+       for(var i=0;i<qs.length;i++){var d=cv.toDataURL("image/jpeg",qs[i]);if(d.length*0.75<MAX_SHOT_BYTES){out=d;break;}out=d;}
+       res(out);
+     };
+     img.onerror=rej;img.src=fr.result;
+   };
+   fr.onerror=rej;fr.readAsDataURL(file);
+ });
+}
+function addShot(tid,file){
+ if(!file||!/^image\//.test(file.type)){toast("Not an image file");return;}
+ downscaleImage(file).then(function(data){
+   if(!data){toast("Couldn't process image");return;}
+   if(!state.targetShots)state.targetShots={};
+   if(!state.targetShots[tid])state.targetShots[tid]=[];
+   state.targetShots[tid].push({id:"sh"+Date.now().toString(36),data:data,cap:file.name||"",ts:Date.now()});
+   if(save())render();
+ }).catch(function(){toast("Couldn't read image");});
+}
+function removeShot(tid,sid){if(state.targetShots&&state.targetShots[tid]){state.targetShots[tid]=state.targetShots[tid].filter(function(s){return s.id!==sid;});save();render();}}
+function openImgView(src){var v=document.createElement("div");v.className="imgview";v.innerHTML='<img src="'+src+'" alt="">';v.addEventListener("click",function(){document.body.removeChild(v);});document.body.appendChild(v);}
+
 /* ---------- AI polish (Superhuman-style, /api/polish on the live site) ---------- */
 var curDraft=null; /* {wk,src,title,move,obj} — one active draft at a time */
 function wkLabel(wk){var w=SEED.filter(function(x){return x.id===wk;})[0];return w?(w.num+" · "+w.title):wk;}
@@ -1216,8 +1306,11 @@ document.addEventListener("click",function(e){
  var bbl=e.target.closest("#brief-blank");if(bbl){addBrief("");render();window.scrollTo(0,0);return;}
  var bex=e.target.closest("[data-brief-export]");if(bex){exportBrief(bex.getAttribute("data-brief-export"));return;}
  var bde=e.target.closest("[data-brief-del]");if(bde){removeBrief(bde.getAttribute("data-brief-del"));return;}
+ var iv=e.target.closest("img[data-imgview]");if(iv){openImgView(iv.src);return;}
+ var shrm=e.target.closest("[data-shotrm]");if(shrm){removeShot(shrm.getAttribute("data-shottid"),shrm.getAttribute("data-shotrm"));return;}
  var tb=e.target.closest("#themebtn");if(tb){var next=curTheme()==="dark"?"light":"dark";applyTheme(next);try{localStorage.setItem(THEME,next);}catch(e2){}renderSidebar();return;}
 });
+document.addEventListener("change",function(e){var si=e.target.closest("[data-shotin]");if(si&&si.files&&si.files[0]){addShot(si.getAttribute("data-shotin"),si.files[0]);si.value="";}});
 document.addEventListener("keydown",function(e){if(e.key==="Enter"){var inp=e.target.closest("[data-add]");if(inp){e.preventDefault();polishMove(inp.getAttribute("data-add"));}var tp=e.target.closest("[data-tplog]");if(tp){addTaskLog(tp.getAttribute("data-tplog"),tp.value);tp.value="";}}});
 document.addEventListener("input",function(e){var f=e.target.closest("[data-bfield]");if(f){updateBrief(f.getAttribute("data-bid"),f.getAttribute("data-bfield"),f.value);return;}var tn=e.target.closest("[data-tnote]");if(tn){if(!state.targetNotes)state.targetNotes={};state.targetNotes[tn.getAttribute("data-tnote")]=tn.value;save();}});
 
