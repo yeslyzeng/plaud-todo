@@ -157,6 +157,7 @@ svg{display:block;}
 .logentry .lx{font-size:14px;color:var(--ink-1);line-height:1.5;flex:1;white-space:pre-wrap;min-width:0;}
 .logentry .lrm{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:15px;line-height:1;opacity:.5;}
 .logentry .lrm:hover{opacity:1;color:var(--signal);}
+.logentry .lsrc{flex-shrink:0;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--stroke-2);border-radius:3px;padding:2px 6px;margin-top:1px;white-space:nowrap;}
 .jg{padding:12px 0;border-top:1px solid var(--stroke-1);}
 .jgh{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:var(--fw-sb);color:var(--ink-2);margin-bottom:5px;}
 .jgb{font-size:13.5px;color:var(--ink-2);line-height:1.5;}
@@ -818,7 +819,7 @@ function renderMain(){
  m.innerHTML=h;
  if(view.sec==="notes")initNotes();
  if(view.sec==="ideas"){initIdeas();loadDigest();}
- if(view.sec==="journal"){initJournal();loadJournal();}
+ if(view.sec==="journal"){initJournal();loadJournal();loadLogFiles();}
  if(view.sec==="context")loadContext();
  if(view.sec==="northstar")initNSGate();
 }
@@ -843,11 +844,29 @@ function journalHTML(){
    return '<div class="logentry"><span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span><button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+k+'" aria-label="Delete">×</button></div>';
  }).join(""):'<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';
  return '<div class="mhead"><div><span class="ovl">Hub · Daily log</span><h1>What did you do?</h1><p class="sub">Dump it raw — broken is fine. It gets synthesised into a sharp, goal-anchored read across day, week, and month.</p></div></div>'
-  +'<div class="tiles">'+tile(m.today,"Today")+tile(m.week,"Last 7 days")+tile(m.streak,"Day streak")+tile(m.days,"Days logged")+'</div>'
+  +'<div class="tiles"><div class="tile"><div class="tv tnum" id="tile-today">'+m.today+'</div><div class="tl">Today</div></div>'+tile(m.week,"Last 7 days")+tile(m.streak,"Day streak")+tile(m.days,"Days logged")+'</div>'
   +'<textarea class="ideabox" id="logbox" placeholder="What did you do since last check-in?  (⌘/Ctrl + Enter)"></textarea>'
   +'<div class="idea-actions"><button class="btn btn-pri" id="logadd">Log it</button><button class="btn btn-sec" id="logexport">Export log</button><span class="hint">'+k+'</span></div>'
   +'<div id="journal-slot"></div>'
-  +'<div class="ovl" style="margin:26px 0 10px">Today</div><div class="loglist">'+items+'</div>';
+  +'<div class="ovl" style="margin:26px 0 10px">Today</div><div class="loglist" id="loglist">'+items+'</div>';
+}
+function parseLogMd(txt){var out=[];(txt||"").split("\n").forEach(function(ln){var m=ln.match(/^-\s*\[(\d{1,2}:\d{2})\]\s*(.+?)\s*$/);if(m)out.push({time:m[1],text:m[2]});});return out;}
+function loadLogFiles(){
+ var slot=document.getElementById("loglist");if(!slot)return;var k=todayKey();
+ fetch("log/"+k+".md",{cache:"no-store"}).then(function(r){return r.ok?r.text():"";}).then(function(txt){
+   var s=document.getElementById("loglist");if(!s)return;
+   var fileEntries=parseLogMd(txt).map(function(e){var hm=e.time.split(":");var d=new Date();d.setHours(parseInt(hm[0],10),parseInt(hm[1],10),0,0);return{ts:d.getTime(),text:e.text,src:"file"};});
+   var fileTexts={};fileEntries.forEach(function(e){fileTexts[e.text.trim()]=1;});
+   var devEntries=((state.log||{})[k]||[]).filter(function(e){return !fileTexts[(e.text||"").trim()];}).map(function(e){return{ts:e.ts,text:e.text,id:e.id,src:"device"};});
+   var all=fileEntries.concat(devEntries).sort(function(a,b){return b.ts-a.ts;});
+   var tt=document.getElementById("tile-today");if(tt)tt.textContent=all.length;
+   if(!all.length){s.innerHTML='<div class="idea-empty">Nothing logged today yet. Check-ins fire at 12 · 3 · 6 · 11, Mon–Fri.</div>';return;}
+   s.innerHTML=all.map(function(e){
+     var t='<span class="lt tnum">'+new Date(e.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+'</span><span class="lx">'+escapeHTML(e.text)+'</span>';
+     if(e.src==="device")return '<div class="logentry">'+t+'<button class="lrm" data-rmlog="'+e.id+'" data-logdate="'+k+'" aria-label="Delete">×</button></div>';
+     return '<div class="logentry"><span class="lsrc" title="Captured by a check-in popup">check-in</span>'+t+'</div>';
+   }).join("");
+ }).catch(function(){});
 }
 function initJournal(){var b=document.getElementById("logbox");if(!b)return;b.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key==="Enter"){addLog(b.value);b.value="";}});}
 function exportLog(){var log=state.log||{},keys=Object.keys(log).filter(function(x){return log[x].length;}).sort();if(!keys.length){toast("Nothing to export");return;}var md=keys.map(function(k){return "## "+k+"\n"+log[k].slice().sort(function(a,b){return a.ts-b.ts;}).map(function(e){return "- ["+new Date(e.ts).toLocaleTimeString()+"] "+e.text;}).join("\n");}).join("\n\n")+"\n";copyText(md,"Log copied");}
