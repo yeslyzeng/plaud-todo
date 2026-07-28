@@ -340,6 +340,22 @@ svg{display:block;}
 .st-live .sd{background:var(--signal);} .st-live{color:var(--signal);}
 .st-done .sd{background:var(--ink-1);} .st-done{color:var(--ink-2);}
 .rrm{margin-left:auto;background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:15px;line-height:1;opacity:.6;}
+.row{cursor:pointer;}
+.rexp{margin-left:auto;display:flex;align-items:center;color:var(--ink-4);flex-shrink:0;transition:transform var(--dur) var(--ease),color var(--dur) var(--ease);}
+.rexp svg{width:15px;height:15px;}
+.row.exp .rexp{transform:rotate(90deg);color:var(--ink-2);}
+.tnote-c{color:var(--ink-2)!important;}
+.tpanel{margin-top:14px;padding-top:14px;border-top:1px solid var(--stroke-1);}
+.tplog{display:flex;flex-direction:column;gap:9px;margin-bottom:11px;}
+.tpe{display:flex;gap:12px;align-items:baseline;font-size:13.5px;color:var(--ink-1);line-height:1.5;}
+.tpt{font-size:11px;color:var(--ink-4);flex-shrink:0;min-width:104px;font-variant-numeric:tabular-nums;}
+.tpx{flex:1;min-width:0;white-space:pre-wrap;}
+.tprm{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:14px;line-height:1;opacity:.5;}
+.tprm:hover{opacity:1;color:var(--signal);}
+.tpempty{font-size:13px;color:var(--ink-4);}
+.tpin{width:100%;box-sizing:border-box;height:38px;background:var(--warm);border:1px solid var(--stroke-2);border-radius:var(--r);color:var(--ink-1);font:inherit;font-size:13.5px;padding:0 12px;}
+.tpin:focus{outline:none;border-color:var(--ink-1);}
+.tpin::placeholder{color:var(--ink-4);}
 .rrm:hover{opacity:1;color:var(--signal);}
 .mine::after{content:"added by you";font-size:10px;color:var(--ink-4);margin-left:8px;letter-spacing:.02em;}
 
@@ -513,11 +529,15 @@ var ICONS={
 function icon(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||"")+'</svg>';}
 
 var state=load();
-function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};if(!o.targetNotes)o.targetNotes={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{},targetNotes:{}};}
+function load(){try{var r=localStorage.getItem(STORE);if(r){var o=JSON.parse(r);if(!o.ideas)o.ideas=[];if(!o.briefs)o.briefs=[];if(!o.log)o.log={};if(!o.targetNotes)o.targetNotes={};if(!o.taskLog)o.taskLog={};return o;}}catch(e){}return{s:{},custom:{},notes:"",notesAt:null,ideas:[],briefs:[],log:{},targetNotes:{},taskLog:{}};}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
 var view={sec:"home",week:null,obj:null,status:"all"};
 var ideaCat="plaud",ideaFilter="all";
 var groupOpen={hub:false,system:false,strategy:false};
+var expanded=new Set();
+function toggleExpand(id){if(expanded.has(id))expanded.delete(id);else expanded.add(id);render();}
+function addTaskLog(id,txt){txt=(txt||"").trim();if(!txt)return;if(!state.taskLog)state.taskLog={};if(!state.taskLog[id])state.taskLog[id]=[];state.taskLog[id].push({id:"p"+Date.now().toString(36),ts:Date.now(),text:txt});save();render();}
+function removeTaskLog(id,eid){if(state.taskLog&&state.taskLog[id]){state.taskLog[id]=state.taskLog[id].filter(function(x){return x.id!==eid;});save();render();}}
 
 function plan(){return SEED.map(function(w){var c=(state.custom[w.id]||[]).map(function(t){return{id:t.id,obj:t.obj||"",pillar:t.pillar||"Mine",text:t.text,move:t.move||"",custom:true,wk:w.id};});return{id:w.id,num:w.num,title:w.title,dates:w.dates,tasks:w.tasks.map(function(t){return Object.assign({wk:w.id},t);}).concat(c)};});}
 function tstate(id){return state.s[id]||"open";}
@@ -602,17 +622,28 @@ function taskRow(t){
  var tag=t.obj?'<span class="tagp"><span class="pd" style="background:'+OBJ_COLOR[t.obj]+'"></span>Obj '+t.obj+'</span>':'<span class="tagp">'+t.pillar+'</span>';
  var stcls="st st-"+st;
  var rm=t.custom?'<button class="rrm" data-rm="'+t.id+'" data-wk="'+t.wk+'" aria-label="Remove">×</button>':'';
- return '<div class="row" data-s="'+st+'" data-id="'+t.id+'">'
+ var log=(state.taskLog&&state.taskLog[t.id])||[];
+ var isExp=expanded.has(t.id);
+ var panel='';
+ if(isExp){
+   var entries=log.length?log.slice().sort(function(a,b){return b.ts-a.ts;}).map(function(e){
+     return '<div class="tpe"><span class="tpt tnum">'+new Date(e.ts).toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})+'</span><span class="tpx">'+escapeHTML(e.text)+'</span><button class="tprm" data-tprm="'+e.id+'" data-tpid="'+t.id+'" aria-label="Delete">×</button></div>';
+   }).join(""):'<div class="tpempty">No progress logged yet. How\u2019s it going?</div>';
+   panel='<div class="tpanel"><div class="tplog">'+entries+'</div><input class="tpin" data-tplog="'+t.id+'" placeholder="Log progress on this move\u2026 (Enter)"></div>';
+ }
+ var cnt=log.length?'<span class="it tnote-c">'+log.length+' note'+(log.length>1?'s':'')+'</span>':'';
+ return '<div class="row'+(isExp?' exp':'')+'" data-s="'+st+'" data-id="'+t.id+'">'
   +'<button class="dot" data-toggle="'+t.id+'" aria-label="Cycle status"></button>'
   +'<div class="rbody">'
-   +'<div class="rtop">'+tag+'<span class="rtitle'+(t.custom?" mine":"")+'">'+t.text+'</span></div>'
+   +'<div class="rtop">'+tag+'<span class="rtitle'+(t.custom?" mine":"")+'">'+t.text+'</span><span class="rexp">'+icon("chev")+'</span></div>'
    +(t.move?'<div class="rmv"><span class="a">→</span><span>'+t.move+'</span></div>':'')
    +'<div class="rfoot">'
      +'<span class="'+stcls+'"><span class="sd"></span>'+STATE_LABEL[st]+'</span>'
      +'<span class="it">'+(t.obj?"Obj "+t.obj+" · "+OBJ_NAME[t.obj]:"Orientation")+'</span>'
      +'<span class="it">'+t.pillar+'</span>'
-     +rm
+     +cnt+rm
    +'</div>'
+   +panel
   +'</div></div>';
 }
 
@@ -1058,6 +1089,8 @@ document.addEventListener("click",function(e){
  var nav=e.target.closest("[data-nav]");
  if(nav){var sec=nav.getAttribute("data-nav");view.sec=sec;view.status="all";if(sec==="week")view.week=nav.getAttribute("data-week");if(sec==="obj")view.obj=nav.getAttribute("data-obj");render();window.scrollTo(0,0);return;}
  var tg=e.target.closest("[data-toggle]");if(tg){cycle(tg.getAttribute("data-toggle"));return;}
+ var tprm=e.target.closest("[data-tprm]");if(tprm){removeTaskLog(tprm.getAttribute("data-tpid"),tprm.getAttribute("data-tprm"));return;}
+ var rowEl=e.target.closest(".row");if(rowEl&&rowEl.getAttribute("data-id")&&!e.target.closest("button,a,input,textarea,.tpanel")){toggleExpand(rowEl.getAttribute("data-id"));return;}
  var rm=e.target.closest("[data-rm]");if(rm){removeCustom(rm.getAttribute("data-wk"),rm.getAttribute("data-rm"));return;}
  var ch=e.target.closest("[data-status]");if(ch){view.status=ch.getAttribute("data-status");render();return;}
  var ab=e.target.closest("[data-addbtn]");if(ab){var wk=ab.getAttribute("data-addbtn"),inp=document.querySelector('[data-add="'+wk+'"]');if(inp){addCustom(wk,inp.value);inp.value="";}return;}
@@ -1076,7 +1109,7 @@ document.addEventListener("click",function(e){
  var bde=e.target.closest("[data-brief-del]");if(bde){removeBrief(bde.getAttribute("data-brief-del"));return;}
  var tb=e.target.closest("#themebtn");if(tb){var next=curTheme()==="dark"?"light":"dark";applyTheme(next);try{localStorage.setItem(THEME,next);}catch(e2){}renderSidebar();return;}
 });
-document.addEventListener("keydown",function(e){if(e.key==="Enter"){var inp=e.target.closest("[data-add]");if(inp){addCustom(inp.getAttribute("data-add"),inp.value);inp.value="";}}});
+document.addEventListener("keydown",function(e){if(e.key==="Enter"){var inp=e.target.closest("[data-add]");if(inp){addCustom(inp.getAttribute("data-add"),inp.value);inp.value="";}var tp=e.target.closest("[data-tplog]");if(tp){addTaskLog(tp.getAttribute("data-tplog"),tp.value);tp.value="";}}});
 document.addEventListener("input",function(e){var f=e.target.closest("[data-bfield]");if(f){updateBrief(f.getAttribute("data-bid"),f.getAttribute("data-bfield"),f.value);return;}var tn=e.target.closest("[data-tnote]");if(tn){if(!state.targetNotes)state.targetNotes={};state.targetNotes[tn.getAttribute("data-tnote")]=tn.value;save();}});
 
 function render(){renderSidebar();renderMain();}
